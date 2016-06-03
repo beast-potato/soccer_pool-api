@@ -72,10 +72,24 @@ get '/sample/games' do
     prediction2["awayGoals"] = 2
     prediction2["homeGoals"] = 1
 
+    teamA = {}
+    teamA["name"] = "Romania"
+    teamA["flag"] = "https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg"
+
+    teamB = {}
+    teamB["name"] = "France"
+    teamB["flag"] = "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg"
+
+    teamC = {}
+    teamC["name"] = "Slovakia"
+    teamC["flag"] = "https://upload.wikimedia.org/wikipedia/commons/e/e6/Flag_of_Slovakia.svg"
+
+
+
     game0 = {}
     game0["gameID"] = "0"
-    game0["awayTeam"] = "TEAM A"
-    game0["homeTeam"] = "TEAM B"
+    game0["awayTeam"] = teamA
+    game0["homeTeam"] = teamB
     game0["startTime"] = "2016-06-11T18:00:00Z"
     game0["awayGoals"] = 0
     game0["homeGoals"] = 0
@@ -83,8 +97,8 @@ get '/sample/games' do
 
     game1 = {}
     game1["gameID"] = "1"
-    game1["awayTeam"] = "TEAM A"
-    game1["homeTeam"] = "TEAM B"
+    game1["awayTeam"] = teamA
+    game1["homeTeam"] = teamC
     game1["startTime"] = "2016-06-10T18:00:00Z"
     game1["awayGoals"] = 0
     game1["homeGoals"] = 0
@@ -92,8 +106,8 @@ get '/sample/games' do
 
     game2 = {}
     game2["gameID"] = "2"
-    game2["awayTeam"] = "TEAM A"
-    game2["homeTeam"] = "TEAM B"
+    game2["awayTeam"] = teamB
+    game2["homeTeam"] = teamC
     game2["startTime"] = "2016-06-02T18:00:00Z"
     game2["awayGoals"] = 3
     game2["homeGoals"] = 0
