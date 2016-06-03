@@ -7,27 +7,28 @@ end
 
 post '/sample/login' do
     result = defaultResult()
-    result["token"] = ""    
-
-    email = params["email"]
-    password = params["password"]
-
-    if email == nil 
-         result["errorCode"] = ECError["InvalidInput"]
-        result["errorMessage"] = "email must end in @plasticmobile.com"
-        return formatResult(result)
-    end 
-    if password == nil
-        result["errorCode"] = ECError["InvalidInput"]
-        result["errorMessage"] = "password cannot be nil"
-        return formatResult(result)
+    
+    #validate params
+    p = {}
+    if defined? params
+        p = params
     end
-    if !email.include? "@plasticmobile.com"
-        result["errorCode"] = ECError["InvalidInput"]
-        result["errorMessage"] = "email must end in @plasticmobile.com"
-        return formatResult(result)
+    
+    email = p["email"]
+    if email.nil?
+        return Error(ECError["InvalidInput"], "'email' must not be nil")
     end
-    result["token"] = email
+    if (email.nil? || !email.include?("@plasticmobile.com"))
+         return Error(ECError["InvalidInput"], "'email' must end in @plasticmobile.com")
+    end
+    password = p['password']
+    if password.nil?
+        return Error(ECError["InvalidInput"], "'password' must not be nil")
+    end
+
+    # perform function
+
+    result["token"] = "t0k3n" + email + "t0k3n"
 
     return formatResult(result)
 end
@@ -56,12 +57,98 @@ get '/sample/pool' do
     return formatResult(result)
 end
 
+get '/sample/games' do
+    result = defaultResult()
+
+    prediction0 = {}
+    prediction0["awayGoals"] = 0
+    prediction0["awayGoals"] = 0
+
+    prediction1 = {}
+    prediction1["awayGoals"] = 3
+    prediction1["awayGoals"] = 0
+
+    prediction2 = {}
+    prediction2["awayGoals"] = 2
+    prediction2["awayGoals"] = 1
+
+    game0 = {}
+    game0["gameID"] = "0"
+    game0["awayTeam"] = "TEAM A"
+    game0["homeTeam"] = "TEAM B"
+    game0["startTime"] = "2016-06-11T18:00:00Z"
+    game0["awayGoals"] = 0
+    game0["homeGoals"] = 0
+    game0["prediction"] = prediction0
+
+    game1 = {}
+    game1["gameID"] = "1"
+    game1["awayTeam"] = "TEAM A"
+    game1["homeTeam"] = "TEAM B"
+    game1["startTime"] = "2016-06-10T18:00:00Z"
+    game1["awayGoals"] = 0
+    game1["homeGoals"] = 0
+    game1["prediction"] = prediction1
+
+    game2 = {}
+    game2["gameID"] = "2"
+    game2["awayTeam"] = "TEAM A"
+    game2["homeTeam"] = "TEAM B"
+    game2["startTime"] = "2016-06-02T18:00:00Z"
+    game2["awayGoals"] = 3
+    game2["homeGoals"] = 0
+    game2["prediction"] = prediction2
+
+    result["data"] = [game0, game1, game2]
+    return formatResult(result)
+end
+
+post '/sample/predictgame' do
+    result = defaultResult()
+
+    #validate params
+    p = {}
+    if defined? params
+        p = params
+    end
+    
+    gameID = p["gameID"]
+    if gameID.nil?
+        return Error(ECError["InvalidInput"], "'gameID' must not be nil")
+    end
+    awayGoals = p["awayGoals"]
+    if awayGoals.nil?
+        return Error(ECError["InvalidInput"], "'awayGoals' must not be nil")
+    end
+    homeGoals = p["homeGoals"]
+    if homeGoals.nil?
+        return Error(ECError["InvalidInput"], "'homeGoals' must not be nil")
+    end
+
+    if gameID == "2"
+        return Error(ECError["InvalidInput"], "it is too late to predict game 'gameID'")
+    end
+    if gameID != "0" && gameID != "1"
+        return Error(ECError["InvalidInput"], "game 'gameID' does not exist")
+    end
+
+    return formatResult(result)
+end    
+
 def defaultResult() 
     result = {}
     result["success"] = true
     result["errorCode"] = 0
     result["errorMessage"] = ""
     return result
+end
+
+def Error(code, message)
+    result = {}
+    result["success"] = false
+    result["errorCode"] = code
+    result["errorMessage"] = message
+    return formatResult(result)
 end
 
 def formatResult(result)
