@@ -1,0 +1,1 @@
+exec("sh ./agarEmail.sh")

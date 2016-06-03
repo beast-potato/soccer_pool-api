@@ -1,0 +1,20 @@
+Writing PID to tmp/pids/thin.3000.pid
+No adapter found for /website
+Exiting!
+Writing PID to tmp/pids/thin.3000.pid
+No adapter found for /website
+Exiting!
+Writing PID to tmp/pids/thin.3000.pid
+No adapter found for /website
+Exiting!
+Writing PID to tmp/pids/thin.3000.pid
+Using rack adapter
+Thin web server (v1.6.2 codename Doc Brown)
+Maximum connections set to 1024
+Listening on 0.0.0.0:3000, CTRL+C to stop
+206.223.160.132 - - [09/Oct/2014 14:16:08] "GET / HTTP/1.1" 304 - 0.0048
+206.223.160.132 - - [09/Oct/2014 14:16:08] "GET /images/springsource.png HTTP/1.1" 404 465 0.0010
+206.223.160.132 - - [09/Oct/2014 14:16:29] "GET / HTTP/1.1" 304 - 0.0017
+206.223.160.132 - - [09/Oct/2014 14:16:29] "GET /images/springsource.png HTTP/1.1" 404 465 0.0013
+Waiting for 1 connection(s) to finish, can take up to 30 sec, CTRL+C to stop now
+Exiting!
