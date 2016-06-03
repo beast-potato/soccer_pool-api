@@ -62,15 +62,15 @@ get '/sample/games' do
 
     prediction0 = {}
     prediction0["awayGoals"] = 0
-    prediction0["awayGoals"] = 0
+    prediction0["homeGoals"] = 0
 
     prediction1 = {}
     prediction1["awayGoals"] = 3
-    prediction1["awayGoals"] = 0
+    prediction1["homeGoals"] = 0
 
     prediction2 = {}
     prediction2["awayGoals"] = 2
-    prediction2["awayGoals"] = 1
+    prediction2["homeGoals"] = 1
 
     game0 = {}
     game0["gameID"] = "0"
