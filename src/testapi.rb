@@ -52,8 +52,8 @@ post '/test/login' do
     end
     password = p['password']
     if password.nil?
-        return Error(ECError["InvalidInput"], "'password' must not be nil")
-    end
+         return Error(ECError["InvalidInput"], "'password' must not be nil")
+   end
 
     token = ""
 
@@ -61,6 +61,9 @@ post '/test/login' do
     collection = ECMongo.getCollection("Users")
     users = collection.find("email" => email).to_a
     if (users.length == 0)
+        if (p["signup"].nil? || p["signup"] == false)
+          return Error(ECError["InvalidInput"], email + "is not registered. Please register your account to login") 
+        end 
         user = {}
         token = Utils.newID
 
