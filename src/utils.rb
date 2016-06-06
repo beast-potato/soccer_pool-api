@@ -6,7 +6,7 @@ class Utils
         return id
     end 
 
-    def self.Encrypt(text)
+    def self.encrypt(text)
         c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
         c.encrypt
         c.key = Digest::SHA1.hexdigest("q1w2e3r4t5y6")
@@ -16,7 +16,7 @@ class Utils
         return temp
     end
 
-    def self.Decrypt(text)
+    def self.decrypt(text)
         temp = Base64.decode64(text)
         c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
         c.decrypt
