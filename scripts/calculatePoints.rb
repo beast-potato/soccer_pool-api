@@ -1,16 +1,11 @@
 require 'json'
 require 'net/http'
 require_relative '../src/ecmongo.rb'
-require_relative '../src/ecmongotest.rb'
 
 gameList = []
 
-
 gameCollection = ECMongo.getCollection("Games")
 predictionCollection = ECMongo.getCollection("Predictions")
-
-#gameCollection = ECMongoTest.getCollection("Games")
-#predictionCollection = ECMongoTest.getCollection("Predictions")
 
 games = gameCollection.find().to_a
 pointsHash = {}
@@ -56,16 +51,19 @@ for game in games
         if points == 4
             points = 5
         end
+
         token = prediction["token"]
         if pointsHash[token].nil?
             pointsHash[token] = 0
         end
         pointsHash[token] += points
+
+        prediction["points"] = points
+        predictionCollection.update_one({"_id" = prediction["_id"]}, prediction)
     end
 end
 
-pointsCollection = ECMongo.getCollection("points")
-#pointsCollection = ECMongoTest.getCollection("Points")
+pointsCollection = ECMongo.getCollection("Points")
 pointsList = []
 pointsHash.each do |key, value|
   point = {}
@@ -74,7 +72,5 @@ pointsHash.each do |key, value|
   pointsList.push(point)
 end
 
-pointsCollection.drop()
-pointsCollection.insert_many(pointsList)
-pointsCollection.insert_one({"_id" => "XXX", "points" => 999, "updateAt" => currentTime}) 
-
+updateCollection = ECMongo.getCollection("Updates")
+updateCollection.insert_one({"time" => currentTime})

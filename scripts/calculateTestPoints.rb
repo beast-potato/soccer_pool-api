@@ -56,11 +56,15 @@ for game in games
         if points == 4
             points = 5
         end
+
         token = prediction["token"]
         if pointsHash[token].nil?
             pointsHash[token] = 0
         end
         pointsHash[token] += points
+
+        prediction["points"] = points
+        predictionCollection.update_one({"_id" = prediction["_id"]}, prediction)
     end
 end
 
@@ -74,7 +78,6 @@ pointsHash.each do |key, value|
   pointsList.push(point)
 end
 
-pointsCollection.drop()
-pointsCollection.insert_many(pointsList)
-
+updateCollection = ECMongoTest.getCollection("Updates")
+updateCollection.insert_one({"time" => currentTime})
 
