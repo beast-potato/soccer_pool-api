@@ -31,6 +31,21 @@ post '/login' do
 
     token = ""
 
+
+    url = 'http://picasaweb.google.com/data/entry/api/user/EMAIL?alt=json'
+    url = url.gsub(/EMAIL/, email)
+    uri = URI(url)
+    resp = Net::HTTP.get(uri)
+
+    if resp.include?("Unable to find")
+        return Error(ECError["InvalidInput"], email + " is not a valid @plasticmobile.com user")
+    end
+
+    data = JSON.parse(resp)
+    entry = data["entry"]
+    name = entry["gphoto$nickname"]["$t"]
+    photo = entry["gphoto$thumbnail"]["$t"]
+
     # perform function
     collection = ECMongo.getCollection("Users")
     users = collection.find("email" => email).to_a
@@ -44,13 +59,17 @@ post '/login' do
         user["email"] = email
         user["password"] = Utils.encrypt(password)
         user["token"] = token
-        
+        user["name"] = name
+        user["photo"] = photo
         collection.insert_one(user)
     else
         user = users[0]
         if (Utils.decrypt(user["password"]) != password)
             return Error(ECError["InvalidInput"], "'password' was incorrect")
         end
+        user["name"] = name
+        user["photo"] = photo
+        collection.update_one({"_id" => user["_id"]},user)
         token = user["token"]
     end
     result['token'] = token

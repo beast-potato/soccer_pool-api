@@ -73,7 +73,6 @@ post '/test/login' do
 
     token = ""
 
-
     url = 'http://picasaweb.google.com/data/entry/api/user/EMAIL?alt=json'
     url = url.gsub(/EMAIL/, email)
     uri = URI(url)
@@ -110,12 +109,9 @@ post '/test/login' do
         if (Utils.decrypt(user["password"]) != password)
             return Error(ECError["InvalidInput"], "'password' was incorrect")
         end
-        if user["name"].nil?
-            user["name"] = name
-        end
-        if user["photo"].nil?
-            user["photo"] = photo
-        end
+        user["name"] = name
+        user["photo"].nil?
+        user["photo"] = photo
         collection.update_one({"_id" => user["_id"]},user)
         token = user["token"]
     end
