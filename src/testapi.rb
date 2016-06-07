@@ -1,24 +1,37 @@
-get '/test/setup' do 
+get '/test/setup' do
+
+    teamA = {}
+    teamA["name"] = "France"
+    teamA["image"] = "http://104.131.118.14/images/France.png"
+     
+    teamB = {}
+    teamB["name"] = "Ukraine"
+    teamB["image"] = "http://104.131.118.14/images/Ukraine.png"
+    
+    teamC = {}
+    teamC["name"] = "Spain"
+    teamC["image"] = "http://104.131.118.14/images/Spain.png"
+     
     game0 = {}
     game0["gameID"] = "0"
-    game0["awayTeam"] = "TEAM A"
-    game0["homeTeam"] = "TEAM B"
+    game0["awayTeam"] = teamA
+    game0["homeTeam"] = teamB
     game0["startTime"] = 1465617600
     game0["awayGoals"] = 0
     game0["homeGoals"] = 0
 
     game1 = {}
     game1["gameID"] = "1"
-    game1["awayTeam"] = "TEAM A"
-    game1["homeTeam"] = "TEAM B"
+    game1["awayTeam"] = teamA
+    game1["homeTeam"] = teamC
     game1["startTime"] = 1465531200
     game1["awayGoals"] = 0
     game1["homeGoals"] = 0
 
     game2 = {}
     game2["gameID"] = "2"
-    game2["awayTeam"] = "TEAM A"
-    game2["homeTeam"] = "TEAM B"
+    game2["awayTeam"] = teamC
+    game2["homeTeam"] = teamB
     game2["startTime"] = 1464840000
     game2["awayGoals"] = 3
     game2["homeGoals"] = 0
@@ -62,7 +75,7 @@ post '/test/login' do
     users = collection.find("email" => email).to_a
     if (users.length == 0)
         if (p["signup"].nil? || p["signup"] == false)
-          return Error(ECError["InvalidInput"], email + "is not registered. Please register your account to login") 
+          return Error(ECError["UserNotFound"], email + "is not registered. Please register your account to login") 
         end 
         user = {}
         token = Utils.newID
@@ -219,7 +232,7 @@ def tokenAuthentication(requestInfo)
     results = collection.find({"token" => token}).to_a
 
     if (results.length != 1)
-        return JSON.parse(Error(ECError["InvalidInput"], "invalid token"))
+        return JSON.parse(Error(ECError["UserNotFound"], "invalid token"))
     end
     
     user = results[0]

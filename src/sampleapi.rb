@@ -170,4 +170,5 @@ def formatResult(result)
 end
 
 ECError = {}
-ECError["InvalidInput"] = 1 
+ECError["InvalidInput"] = 1
+ECError["UserNotFound"] = 2
