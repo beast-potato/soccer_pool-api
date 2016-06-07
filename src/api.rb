@@ -31,7 +31,7 @@ post '/login' do
     users = collection.find("email" => email).to_a
     if (users.length == 0)
         if (p["signup"].nil? || p["signup"] == false)
-          return Error(ECError["UserNotFound"], email + "is not registered. Please register your account to login") 
+          return Error(ECError["UserNotFound"], email + " is not registered. Please register your account to login") 
         end 
         user = {}
         token = Utils.newID
