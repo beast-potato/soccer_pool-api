@@ -16,7 +16,8 @@ post '/login' do
     if email.nil?
         return Error(ECError["InvalidInput"], "'email' must not be nil")
     end
-    if (email.nil? || !email.include?("@plasticmobile.com"))
+    email = email.downcase
+    if (!email.include?("@plasticmobile.com"))
          return Error(ECError["InvalidInput"], "'email' must end in @plasticmobile.com")
     end
     password = p['password']
@@ -69,6 +70,15 @@ get '/games' do
 
     collection = ECMongo.getCollection("Predictions")
     predictions = safeArray(collection.find({"token" => user["token"]}).to_a)
+
+    collection = ECMongo.getCollection("Teams")
+    teams = collection.find().to_a
+    teamsHash = {}
+    
+    for team in teams
+        teamsHash[team["_id"]] = {"name" => team["name"], "image" => team["image"]}
+    end
+
     predictionsHash = {}
     for prediction in predictions 
         predictionsHash[prediction["gameID"]] = prediction
@@ -86,12 +96,15 @@ get '/games' do
         end
         game["prediction"] = prediction
         game["cutOffTime"] = getCutOffTime(game["startTime"])
+        game["awayTeam"] = teamsHash[game["awayTeam"]]
+        game["homeTeam"] = teamsHash[game["homeTeam"]]
         gamePredictions.push(game)
     end
 
     result["data"] = gamePredictions
     return formatResult(result)
 end
+
 
 get '/teams' do
 	result = defaultResult()

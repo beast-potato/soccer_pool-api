@@ -60,7 +60,8 @@ post '/test/login' do
     if email.nil?
         return Error(ECError["InvalidInput"], "'email' must not be nil")
     end
-    if (email.nil? || !email.include?("@plasticmobile.com"))
+    email = email.downcase
+    if (!email.include?("@plasticmobile.com"))
          return Error(ECError["InvalidInput"], "'email' must end in @plasticmobile.com")
     end
     password = p['password']

@@ -6,11 +6,11 @@ require_relative '../src/ecmongotest.rb'
 gameList = []
 
 
-#gameCollection = ECMongo.getCollection("Games")
-#predictionCollection = ECMongo.getCollection("Predictions")
+gameCollection = ECMongo.getCollection("Games")
+predictionCollection = ECMongo.getCollection("Predictions")
 
-gameCollection = ECMongoTest.getCollection("Games")
-predictionCollection = ECMongoTest.getCollection("Predictions")
+#gameCollection = ECMongoTest.getCollection("Games")
+#predictionCollection = ECMongoTest.getCollection("Predictions")
 
 games = gameCollection.find().to_a
 pointsHash = {}
@@ -64,8 +64,8 @@ for game in games
     end
 end
 
-#pointsCollection = ECMongo.getCollection("points")
-pointsCollection = ECMongoTest.getCollection("Points")
+pointsCollection = ECMongo.getCollection("points")
+#pointsCollection = ECMongoTest.getCollection("Points")
 pointsList = []
 pointsHash.each do |key, value|
   point = {}
