@@ -203,9 +203,10 @@ post '/test/predictgame' do
         return Error(ECError["InvalidInput"], "'homeGoals' must not be nil")
     end
 
-    if gameID == "2"
-         return Error(ECError["InvalidInput"], "it is too late to predict game 'gameID'")
-    end
+    #if gameID == "2"
+    #     return Error(ECError["InvalidInput"], "it is too late to predict game 'gameID'")
+    #end
+    
     if gameID != "0" && gameID != "1" && gameID != "2"
         return Error(ECError["InvalidInput"], "game 'gameID' does not exist")
     end
