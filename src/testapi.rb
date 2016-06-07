@@ -144,7 +144,8 @@ get '/test/pool' do
     pointList = []
     for user in users
         pointData = {}
-        pointData["name"] = user["email"].split("@").first
+        pointData["name"] = user["name"]
+        pointData["photo"] = user["photo"]
         points = pointsHash[user["token"]]
         if points.nil?
             points = {"points" => 0}
