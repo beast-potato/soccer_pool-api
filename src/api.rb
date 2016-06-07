@@ -53,38 +53,6 @@ post '/login' do
     return formatResult(result)
 end
 
-get '/pool' do
-    ##Authentication
-    authInfo = tokenAuthentication(request.env)
-    if authInfo["success"] == false
-        return formatResult(authInfo)
-    end
-    user = authInfo
-    #Authentication
-
-    result = defaultResult()
-    brian = {}
-    brian["name"] = "Brian"
-    brian["points"] = 10
-
-    oleksiy = {}
-    oleksiy["name"] = "Oleksiy"
-    oleksiy["points"] = 8
-
-    omar = {}
-    omar["name"] = "Omar"
-    omar["points"] = 7
-
-    sandeep = {}
-    sandeep["name"] = "Sandeep"
-    sandeep["points"] = 3
-
-    result["data"] = [brian, oleksiy, omar, sandeep]
-
-    return formatResult(result)
-end
-
-
 get '/games' do
     ##Authentication
     authInfo = tokenAuthentication(request.env)
@@ -194,7 +162,7 @@ end
 
 get '/pool' do
     ##Authentication
-    authInfo = tokenAuthenticationTest(request.env)
+    authInfo = tokenAuthentication(request.env)
     if authInfo["success"] == false
         return formatResult(authInfo)
     end
