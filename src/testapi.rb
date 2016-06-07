@@ -90,11 +90,11 @@ post '/test/login' do
     # perform function
     collection = ECMongoTest.getCollection("Users")
     users = collection.find("email" => email).to_a
+    user = {}
     if (users.length == 0)
         if (p["signup"].nil? || p["signup"] == false)
           return Error(ECError["UserNotFound"], email + "is not registered. Please register your account to login") 
         end 
-        user = {}
         token = Utils.newID
 
         user["email"] = email
