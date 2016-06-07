@@ -64,7 +64,7 @@ for game in games
         pointsHash[token] += points
 
         prediction["points"] = points
-        predictionCollection.update_one({"_id" = prediction["_id"]}, prediction)
+        predictionCollection.update_one({"_id" => prediction["_id"]}, prediction)
     end
 end
 
