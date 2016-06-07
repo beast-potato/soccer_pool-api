@@ -160,10 +160,12 @@ get '/test/games' do
     gamePredictions = []
     for game in games 
         prediction = predictionsHash[game["gameID"]]
+        game["hasBeenPredicted"] = true
         if prediction.nil?
             prediction = {}
             prediction["awayGoals"] = 0
             prediction["homeGoals"] = 0
+            game["hasBeenPredicted"] = false
         end
         game["prediction"] = prediction
         gamePredictions.push(game)
@@ -223,7 +225,6 @@ post '/test/predictgame' do
     result["data"] = safeObj(prediction)
     return formatResult(result)
 end    
-    
 
 def tokenAuthenticationTest(requestInfo)
 ## token authentication
