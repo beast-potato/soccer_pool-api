@@ -3,6 +3,10 @@ get '/images/:filename' do
     send_file File.join(settings.public_folder, 'images/' + params['filename'])
 end
 
+get '/info' do 
+   send_file File.join(settings.public_folder, 'info.html')
+end 
+
 post '/login' do
     result = defaultResult()
     
