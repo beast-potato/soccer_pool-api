@@ -7,7 +7,7 @@ class ECMongo
 
     def self.connect()
         if @@db.nil?
-            @@db = Mongo::Client.new([ 'localhost:27017' ], :database => 'TestEuroCup')
+            @@db = Mongo::Client.new([ 'localhost:27017' ], :database => 'EuroCup')
             #([ '192.168.56.102:27017' ], :database => 'convoos')
         end
     end

@@ -36,7 +36,7 @@ get '/test/setup' do
     game2["awayGoals"] = 3
     game2["homeGoals"] = 0
 
-    collection = ECMongo.getCollection("Games")
+    collection = ECMongoTest.getCollection("Games")
     collection.drop
     collection.insert_many([game0, game1, game2])
 
@@ -71,7 +71,7 @@ post '/test/login' do
     token = ""
 
     # perform function
-    collection = ECMongo.getCollection("Users")
+    collection = ECMongoTest.getCollection("Users")
     users = collection.find("email" => email).to_a
     if (users.length == 0)
         if (p["signup"].nil? || p["signup"] == false)
@@ -99,38 +99,44 @@ end
 
 get '/test/pool' do
     ##Authentication
-    authInfo = tokenAuthentication(request.env)
+    authInfo = tokenAuthenticationTest(request.env)
     if authInfo["success"] == false
         return formatResult(authInfo)
     end
-    user = authInfo
+    #user = authInfo
     #Authentication
 
     result = defaultResult()
-    brian = {}
-    brian["name"] = "Brian"
-    brian["points"] = 10
 
-    oleksiy = {}
-    oleksiy["name"] = "Oleksiy"
-    oleksiy["points"] = 8
+    usersCollection = ECMongoTest.getCollection("Users")
+    users = usersCollection.find().to_a
 
-    omar = {}
-    omar["name"] = "Omar"
-    omar["points"] = 7
+    pointsCollection = ECMongoTest.getCollection("Points")
+    points = pointsCollection.find().to_a
+    pointsHash = {}
+    for point in points
+        pointsHash[point["_id"]] = point
+    end
 
-    sandeep = {}
-    sandeep["name"] = "Sandeep"
-    sandeep["points"] = 3
+    pointList = []
+    for user in users
+        pointData = {}
+        pointData["name"] = user["email"].split("@").first
+        points = pointsHash[user["token"]]
+        if points.nil?
+            points = {"points" => 0}
+        end
+        pointData["points"] = points["points"]
+        pointList.push(pointData)
+    end
 
-    result["data"] = [brian, oleksiy, omar, sandeep]
-
+    result["data"] = pointList
     return formatResult(result)
 end
 
 get '/test/games' do
     ##Authentication
-    authInfo = tokenAuthentication(request.env)
+    authInfo = tokenAuthenticationTest(request.env)
     if authInfo["success"] == false
         return formatResult(authInfo)
     end
@@ -139,11 +145,11 @@ get '/test/games' do
 
     result = defaultResult()
     
-    collection = ECMongo.getCollection("Games")
+    collection = ECMongoTest.getCollection("Games")
     games = safeArray(collection.find().to_a)
     gamesHash = {}
 
-    collection = ECMongo.getCollection("Predictions")
+    collection = ECMongoTest.getCollection("Predictions")
     predictions = safeArray(collection.find({"token" => user["token"]}).to_a)
     predictionsHash = {}
     for prediction in predictions 
@@ -168,7 +174,7 @@ end
 
 post '/test/predictgame' do
     ##Authentication
-    authInfo = tokenAuthentication(request.env)
+    authInfo = tokenAuthenticationTest(request.env)
     if authInfo["success"] == false
         return formatResult(authInfo)
     end
@@ -197,13 +203,13 @@ post '/test/predictgame' do
     end
 
     if gameID == "2"
-        return Error(ECError["InvalidInput"], "it is too late to predict game 'gameID'")
+         return Error(ECError["InvalidInput"], "it is too late to predict game 'gameID'")
     end
-    if gameID != "0" && gameID != "1"
+    if gameID != "0" && gameID != "1" && gameID != "2"
         return Error(ECError["InvalidInput"], "game 'gameID' does not exist")
     end
 
-    collection = ECMongo.getCollection("Predictions")
+    collection = ECMongoTest.getCollection("Predictions")
     prediction = {}
     prediction["gameID"] = gameID
     prediction["awayGoals"] = awayGoals
@@ -216,8 +222,9 @@ post '/test/predictgame' do
     result["data"] = safeObj(prediction)
     return formatResult(result)
 end    
+    
 
-def tokenAuthentication(requestInfo)
+def tokenAuthenticationTest(requestInfo)
 ## token authentication
     token = requestInfo["TOKEN"]
     if token.nil?
@@ -228,7 +235,7 @@ def tokenAuthentication(requestInfo)
         return JSON.parse(Error(ECError["InvalidInput"], "'token' header required"))
     end
 
-    collection = ECMongo.getCollection("Users")
+    collection = ECMongoTest.getCollection("Users")
     results = collection.find({"token" => token}).to_a
 
     if (results.length != 1)
@@ -239,20 +246,3 @@ def tokenAuthentication(requestInfo)
     ## token authentication
     return user
 end
-
-def safeArray(array)
-    arr = []
-    for obj in array
-        obj.delete("_id")
-        obj.delete("token")
-        arr.push(obj)
-    end 
-    return arr
-end
-
-def safeObj(obj)
-    obj.delete("_id")
-    obj.delete("token")
-    return obj
-end
-    

@@ -13,19 +13,19 @@ class ECMongoTest
     end
 
     def self.connectFS()
-        ECMongo.connect
+        ECMongoTest.connect
         if @@fs.nil?
             @@fs = Grid.new(@@db)
         end
     end
 
     def self.getCollection(name)
-        ECMongo.connect
+        ECMongoTest.connect
         return @@db[name]
     end
 
     def set_file(file, fn)
-        ECMongo.connectFS 
+        ECMongoTest.connectFS 
         ## Make this over write to avoid conflicts    
         @@fs.delete(fn)
         id = @@fs.put(file[:tempfile], :filename => fn, :_id => fn)
@@ -33,7 +33,7 @@ class ECMongoTest
     end   
  
     def display_file(id)
-        file = ECMongo.get_file(id)
+        file = ECMongoTest.get_file(id)
 
         [200, {'Content-type' => 'image/png'}, [file.read]]
     end
