@@ -72,5 +72,8 @@ pointsHash.each do |key, value|
   pointsList.push(point)
 end
 
+pointsCollection.drop()
+pointsCollection.insert_many(pointsList)
+
 updateCollection = ECMongo.getCollection("Updates")
 updateCollection.insert_one({"time" => currentTime})
