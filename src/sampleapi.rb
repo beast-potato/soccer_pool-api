@@ -148,26 +148,3 @@ post '/sample/predictgame' do
 
     return formatResult(result)
 end    
-
-def defaultResult() 
-    result = {}
-    result["success"] = true
-    result["errorCode"] = 0
-    result["errorMessage"] = ""
-    return result
-end
-
-def Error(code, message)
-    result = {}
-    result["success"] = false
-    result["errorCode"] = code
-    result["errorMessage"] = message
-    return formatResult(result)
-end
-
-def formatResult(result)
-    result.to_json()
-end
-
-ECError = {}
-ECError["InvalidInput"] = 1 
