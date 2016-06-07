@@ -1,3 +1,5 @@
+require 'net/http'
+
 get '/test/setup' do
 
     teamA = {}
@@ -66,10 +68,27 @@ post '/test/login' do
     end
     password = p['password']
     if password.nil?
-         return Error(ECError["InvalidInput"], "'password' must not be nil")
+        return Error(ECError["InvalidInput"], "'password' must not be nil")
    end
 
     token = ""
+
+
+    url = 'http://picasaweb.google.com/data/entry/api/user/EMAIL?alt=json'
+    url = url.gsub(/EMAIL/, email)
+    uri = URI(url)
+    resp = Net::HTTP.get(uri)
+
+    if resp.include?("Unable to find")
+        return Error(ECError["InvalidInput"], email + " is not a valid @plasticmobile.com user")
+    end
+
+    data = JSON.parse(resp)
+    entry = data["entry"]
+    name = entry["gphoto$nickname"]["$t"]
+    photo = entry["gphoto$thumbnail"]["$t"]
+
+    return formatResult(result)
 
     # perform function
     collection = ECMongoTest.getCollection("Users")
@@ -84,17 +103,26 @@ post '/test/login' do
         user["email"] = email
         user["password"] = Utils.encrypt(password)
         user["token"] = token
-        
+        user["name"] = name
+        user["photo"] = photo
+
         collection.insert_one(user)
     else
         user = users[0]
         if (Utils.decrypt(user["password"]) != password)
             return Error(ECError["InvalidInput"], "'password' was incorrect")
         end
+        if user["name"].nil?
+            user["name"] = name
+        end
+        if user["photo"].nil?
+            user["photo"] = photo
+        end
+        collection.update_one({"_id" => user["_id"]},user)
         token = user["token"]
     end
     result['token'] = token
-
+    result["user"] = user
     return formatResult(result)
 end
 
