@@ -88,8 +88,6 @@ post '/test/login' do
     name = entry["gphoto$nickname"]["$t"]
     photo = entry["gphoto$thumbnail"]["$t"]
 
-    return formatResult(result)
-
     # perform function
     collection = ECMongoTest.getCollection("Users")
     users = collection.find("email" => email).to_a
