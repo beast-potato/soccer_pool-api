@@ -191,6 +191,7 @@ get '/test/games' do
             prediction = {}
             prediction["awayGoals"] = 0
             prediction["homeGoals"] = 0
+            prediction["points"] = 0
             game["hasBeenPredicted"] = false
         end
         game["prediction"] = prediction
