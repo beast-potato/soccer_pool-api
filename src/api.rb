@@ -44,6 +44,9 @@ post '/login' do
     data = JSON.parse(resp)
     entry = data["entry"]
     name = entry["gphoto$nickname"]["$t"]
+    if name.to_i != 0
+        name = email.split("@")[0]
+    end
     photo = entry["gphoto$thumbnail"]["$t"]
 
     # perform function
