@@ -76,5 +76,5 @@ end
 
 pointsCollection.drop()
 pointsCollection.insert_many(pointsList)
-pointsCollection.insert_one({"_id" => "XXX", "points" => 999}) 
+pointsCollection.insert_one({"_id" => "XXX", "points" => 999, "updateAt" => currentTime}) 
 
