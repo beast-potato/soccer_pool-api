@@ -119,7 +119,7 @@ post '/test/login' do
         token = user["token"]
     end
     result['token'] = token
-    result["user"] = user
+    result["user"] = safeObj(user)
     return formatResult(result)
 end
 
@@ -191,10 +191,14 @@ get '/test/games' do
             prediction = {}
             prediction["awayGoals"] = 0
             prediction["homeGoals"] = 0
-            prediction["points"] = 0
+            
             game["hasBeenPredicted"] = false
         end
+        if prediction["points"].nil?
+            prediction["points"] = 0
+        end
         game["prediction"] = prediction
+        game["cutOffTime"] = getCutOffTime(game["startTime"])
         gamePredictions.push(game)
     end
 
