@@ -1,9 +1,16 @@
 require 'json'
 require 'net/http'
+require 'uri'
 require_relative '../src/ecmongo.rb'
 
-uri = URI('http://api.football-data.org/v1/soccerseasons/424/fixtures')
-data = JSON.parse(Net::HTTP.get(uri))
+url = URI.parse("http://api.football-data.org/v1/soccerseasons/424/fixtures")
+req = Net::HTTP::Get.new(url.path)
+req.add_field("X-Auth-Token", "8e4fb54a4f0e4717ad1e45e2abc2d2f6")
+res = Net::HTTP.new(url.host, url.port).start do |http|
+  http.request(req)
+end
+
+data = JSON.parse(res.body)
 
 gameList = []
 
@@ -15,7 +22,7 @@ for game in games
     gameObj["gameID"] = gameObj["_id"]
     gameObj["awayTeam"] = game["_links"]["awayTeam"]["href"].split("/").last
     gameObj["homeTeam"] = game["_links"]["homeTeam"]["href"].split("/").last
-    gameObj["startTime"] = Date.parse(game["date"]).to_time.to_i
+    gameObj["startTime"] = DateTime.parse(game["date"]).to_time.to_i
     homeGoals = game["result"]["goalsHomeTeam"]
     awayGoals = game["result"]["goalsAwayTeam"]
     if homeGoals.nil?

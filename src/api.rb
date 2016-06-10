@@ -1,4 +1,10 @@
+get '/oleksiy' do
+    "oleksiy eats too much salchicha! #NoGains"
+end
+
+
 get '/images/:filename' do
+    puts "TESTING THIS VALUE"
     puts params["filename"]
     send_file File.join(settings.public_folder, 'images/' + params['filename'])
 end
@@ -21,9 +27,9 @@ post '/login' do
         return Error(ECError["InvalidInput"], "'email' must not be nil")
     end
     email = email.downcase
-    if (!email.include?("@plasticmobile.com"))
-         return Error(ECError["InvalidInput"], "'email' must end in @plasticmobile.com")
-    end
+#    if (!email.include?("@plasticmobile.com"))
+ #        return Error(ECError["InvalidInput"], "'email' must end in @plasticmobile.com")
+ #   end
     password = p['password']
     if password.nil?
          return Error(ECError["InvalidInput"], "'password' must not be nil")
@@ -141,6 +147,31 @@ get '/teams' do
 	teams = collection.find().to_a
 	result["data"] = teams
 	return formatResult(result)
+end
+
+get '/allgames' do
+    result = defaultResult()
+    collection = ECMongo.getCollection("Games")
+    games = safeArray(collection.find().to_a)
+	
+        
+    collection = ECMongo.getCollection("Teams")
+    teams = collection.find().to_a
+    teamsHash = {}
+    
+    for team in teams
+        teamsHash[team["_id"]] = {"name" => team["name"], "image" => team["image"]}
+    end
+
+    gameList = []
+    for game in games 
+        game["homeTeam"] = teamsHash[game["homeTeam"]]
+        game["awayTeam"] = teamsHash[game["awayTeam"]]
+        gameList.push(game)
+    end
+
+    result["data"] = gameList
+    return formatResult(result)
 end
 
 post '/predictgame' do

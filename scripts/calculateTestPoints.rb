@@ -28,7 +28,8 @@ for game in games
     if awayScore < homeScore
         winner = "home"
     end
-    predictions = predictionCollection.find({"gameID" => game["gameID"]})
+    predictions = predictionCollection.find({"gameID" => game["gameID"]}).to_a
+    puts predictions
     for prediction in predictions
         points = 0
 
@@ -67,7 +68,8 @@ for game in games
         predictionCollection.update_one({"_id" => prediction["_id"]}, prediction)
     end
 end
-
+puts pointsHash
+puts "%%%%%%%%%%%%%%%%%%%%%%%"
 #pointsCollection = ECMongo.getCollection("points")
 pointsCollection = ECMongoTest.getCollection("Points")
 pointsList = []
