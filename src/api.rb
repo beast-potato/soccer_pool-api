@@ -113,6 +113,8 @@ get '/games' do
 
     predictionsHash = {}
     for prediction in predictions 
+        prediction["awayGoals"] = prediction["awayGoals"].to_i
+        prediction["homeGoals"] = prediction["homeGoals"].to_i
         predictionsHash[prediction["gameID"]] = prediction
     end
 
@@ -222,8 +224,8 @@ post '/predictgame' do
     collection = ECMongo.getCollection("Predictions")
     prediction = {}
     prediction["gameID"] = gameID
-    prediction["awayGoals"] = awayGoals
-    prediction["homeGoals"] = homeGoals
+    prediction["awayGoals"] = awayGoals.to_i
+    prediction["homeGoals"] = homeGoals.to_i
     prediction["token"] = user["token"]
     
     collection.delete_one({"gameID" => gameID, "token" => user["token"]})
