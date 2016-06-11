@@ -56,7 +56,9 @@ for game in games
         if pointsHash[token].nil?
             pointsHash[token] = 0
         end
-        pointsHash[token] += points
+        previous = pointsHash[token]
+        current += points
+        pointsHash[token] = current
 
         prediction["points"] = points
         predictionCollection.update_one({"_id" => prediction["_id"]}, prediction)
