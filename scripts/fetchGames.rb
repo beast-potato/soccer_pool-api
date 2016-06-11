@@ -22,6 +22,14 @@ for game in games
     gameObj["gameID"] = gameObj["_id"]
     gameObj["awayTeam"] = game["_links"]["awayTeam"]["href"].split("/").last
     gameObj["homeTeam"] = game["_links"]["homeTeam"]["href"].split("/").last
+    status = game["status"]
+    state = "progress"
+    if status == "TIMED"
+        state = "upcoming"
+    elsif status == "FINISHED"
+        state = "complete"
+    end
+    gameObj["state"] = state
     gameObj["startTime"] = DateTime.parse(game["date"]).to_time.to_i
     homeGoals = game["result"]["goalsHomeTeam"]
     awayGoals = game["result"]["goalsAwayTeam"]
