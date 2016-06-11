@@ -60,6 +60,9 @@ for game in games
         current += points
         pointsHash[token] = current
 
+        prediction["awayGoals"] = prediction["awayGoals"].to_i
+        prediction["homeGoals"] = prediction["homeGoals"].to_i
+
         prediction["points"] = points
         predictionCollection.update_one({"_id" => prediction["_id"]}, prediction)
     end
