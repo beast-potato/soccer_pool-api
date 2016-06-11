@@ -57,7 +57,7 @@ for game in games
             pointsHash[token] = 0
         end
         previous = pointsHash[token]
-        current += points
+        current = previous + points
         pointsHash[token] = current
 
         prediction["awayGoals"] = prediction["awayGoals"].to_i
