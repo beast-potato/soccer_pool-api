@@ -259,6 +259,7 @@ get '/pool' do
     pointList = []
     for user in users
         pointData = {}
+        pointData["email"] = user["email"]
         pointData["name"] = user["name"]
         pointData["photo"] = user["photo"]
         points = pointsHash[user["token"]]
