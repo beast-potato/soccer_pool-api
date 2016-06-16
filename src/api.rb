@@ -270,8 +270,8 @@ get '/pool' do
         pointList.push(pointData)
     end
 
-    sortedPointList = pointList.sort_by{|a| a["points"]}.reverse
-    result["data"] = sortedPointList    
+    sortedPointList = pointList.sort_by{|a| [-a["points"], a["email"]]}
+    result["data"] = sortedPointList   
     #result["data"] = pointList
     return formatResult(result)
 end
