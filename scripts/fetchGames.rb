@@ -40,6 +40,13 @@ for game in games
     gameObj["requiresWinner"] = requiresWinner
     homeGoals = game["result"]["goalsHomeTeam"]
     awayGoals = game["result"]["goalsAwayTeam"]
+    
+    if !game["result"]["extraTime"].nil?
+        result = game["result"]["extraTime"]
+        homeGoals = result["goalsHomeTeam"].to_i
+        awayGoals = result["goalsAwayTeam"].to_i
+    end
+
     winner = "tie"
     if homeGoals.nil?
         homeGoals = 0
@@ -57,17 +64,10 @@ for game in games
     if awayGoals < homeGoals
         winner = "homeTeam"
     end
+
     gameObj["awayGoals"] = awayGoals
     gameObj["homeGoals"] = homeGoals
-    if !game["result"]["extraTime"].nil?
-        result = game["result"]["extraTime"]
-        if result["goalsHomeTeam"].to_i > result["goalsAwayTeam"].to_i
-            winner = "homeTeam"
-        end
-        if result["goalsHomeTeam"].to_i < result["goalsAwayTeam"].to_i
-            winner = "awayTeam"
-        end
-    end
+
     if !game["result"]["penaltyShootout"].nil?
         result = game["result"]["penaltyShootout"]
         if result["goalsHomeTeam"].to_i > result["goalsAwayTeam"].to_i
@@ -77,6 +77,7 @@ for game in games
             winner = "awayTeam"
         end
     end
+
     gameObj["winner"] = winner
     collection.update_one({"_id" => gameObj["_id"]}, gameObj, {:upsert => true})
 end
