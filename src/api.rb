@@ -214,6 +214,25 @@ post '/predictgame' do
     end
     game = game[0]
 
+    winner = p["winner"]
+    if game["requiresWinner"]
+
+        if awayGoals > homeGoals
+            winner = "awayTeam"
+        end
+
+        if awayGoals < homeGoals
+            winner = "homeTeam"
+        end
+
+        if winner.nil?
+            return Error(ECError["InvalidInput"], "this game requires a 'winner' of 'awayTeam' or 'homeTeam'")
+        end
+        if !(winner == "awayTeam" || winner == "homeTeam")
+           return Error(ECError["InvalidInput"], "this game requires a 'winner' of 'awayTeam' or 'homeTeam'")
+        end
+    end
+    
     currentTime = Time.now.to_i
     closedBetsTime = getCutOffTime(game["startTime"])
 
@@ -227,7 +246,10 @@ post '/predictgame' do
     prediction["awayGoals"] = awayGoals.to_i
     prediction["homeGoals"] = homeGoals.to_i
     prediction["token"] = user["token"]
-    
+    if !winner.nil?
+        prediction["winner"] = winner
+    end
+
     collection.delete_one({"gameID" => gameID, "token" => user["token"]})
     collection.insert_one(prediction)
 

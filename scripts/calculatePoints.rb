@@ -16,13 +16,8 @@ for game in games
     end
     awayScore = game["awayGoals"].to_i
     homeScore = game["homeGoals"].to_i
-    winner = "tie"
-    if awayScore > homeScore
-        winner = "away"
-    end
-    if awayScore < homeScore
-        winner = "home"
-    end
+    winner = game["winner"]
+
     predictions = predictionCollection.find({"gameID" => game["gameID"]})
     for prediction in predictions
         points = 0
@@ -32,24 +27,35 @@ for game in games
 
         winnerPrediction = "tie"
         if awayPrediction > homePrediction
-            winnerPrediction = "away"
+            winnerPrediction = "awayTeam"
         end
+        
         if awayPrediction < homePrediction
-            winnerPrediction = "home"
+            winnerPrediction = "homeTeam"
         end
-
+        
+        if !prediction["winner"].nil?
+            winnerPrediction = prediction["winner"]
+        end
+        
         if winnerPrediction == winner
             points += 2
         end
+        
         if awayPrediction == awayScore
             points += 1
         end
+        
         if homePrediction == homeScore
             points += 1
         end
 
         if points == 4
             points = 5
+        end
+
+        if game["requiresWinner"] 
+            points = points * 2
         end
 
         token = prediction["token"]
