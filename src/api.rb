@@ -214,7 +214,7 @@ post '/predictgame' do
     end
     game = game[0]
 
-    winner = p["winner"]
+    winner = nil
     if game["requiresWinner"]
 
         if awayGoals > homeGoals
