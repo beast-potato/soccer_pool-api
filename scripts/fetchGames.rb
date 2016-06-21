@@ -33,8 +33,8 @@ for game in games
     startTime = DateTime.parse(game["date"]).to_time.to_i
     gameObj["startTime"] = startTime
     requiresWinner = false
-    #if (startTime > 1466622000)
-    if (startTime > 1466621000)
+    if (startTime > 1466622000)
+    #if (startTime > 1466621000)
         requiresWinner = true
     end
     gameObj["requiresWinner"] = requiresWinner
