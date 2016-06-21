@@ -226,10 +226,10 @@ post '/predictgame' do
         end
 
         if winner.nil?
-            return Error(ECError["InvalidInput"], "this game requires a 'winner' of 'awayTeam' or 'homeTeam'")
+            return Error(ECError["InvalidInput"], "this game requires a winner")
         end
         if !(winner == "awayTeam" || winner == "homeTeam")
-           return Error(ECError["InvalidInput"], "this game requires a 'winner' of 'awayTeam' or 'homeTeam'")
+            return Error(ECError["InvalidInput"], "this game requires a winner")        
         end
     end
     
