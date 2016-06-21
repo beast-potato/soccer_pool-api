@@ -38,6 +38,8 @@ for game in games
             winnerPrediction = prediction["winner"]
         end
         
+        prediction["winner"] = winnerPrediction
+
         if winnerPrediction == winner
             points += 2
         end
@@ -70,6 +72,7 @@ for game in games
         prediction["homeGoals"] = prediction["homeGoals"].to_i
 
         prediction["points"] = points
+        
         predictionCollection.update_one({"_id" => prediction["_id"]}, prediction)
     end
 end
