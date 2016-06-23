@@ -62,8 +62,8 @@ for game in games
         requiresWinner = true
     end
     gameObj["requiresWinner"] = requiresWinner
-    homeGoals = game["result"]["goalsHomeTeam"]
-    awayGoals = game["result"]["goalsAwayTeam"]
+    homeGoals = game["result"]["goalsHomeTeam"].to_i
+    awayGoals = game["result"]["goalsAwayTeam"].to_i
 
     if !game["result"]["extraTime"].nil?
         result = game["result"]["extraTime"]
